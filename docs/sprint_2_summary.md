@@ -14,10 +14,22 @@ To transform raw, unorganized CSV data (Bronze) into an optimized, query-ready P
 - **Standardization:** Programmatically converted all column headers to lowercase with underscores.
 
 ## 4. Validation
-- Verified the existence of `.parquet` files in `s3://nexus-retail-silver-.../`.
-- Successfully ignored local `venv` and `.env` files during the Git push to maintain repository security.
+- Verified the existence of `.parquet` files in the Silver S3 bucket.
+- Confirmed that the Python script correctly handled data types during the conversion process.
 
-## 7. Final Validation & Results
-- **AWS Glue:** Created and executed a crawler to catalog 3 tables into the `db_retail_analytics` database.
-- **Athena Integration:** Successfully executed SQL JOIN queries on Parquet data.
-- **Key Result:** Data is now accessible for BI tools (like Power BI or Tableau) with optimized performance.
+## 5. Security Incident & Recovery
+- **Issue:** Detected sensitive AWS Access Keys pushed to the public repository in `src/.env`.
+- **Response:** 1. Immediately removed the file from Git tracking using `git rm --cached`.
+    2. Updated `.gitignore` to prevent future leaks.
+    3. Rotated IAM credentials in the AWS Console to invalidate the leaked keys.
+- **Outcome:** Pipeline is now secure and running with fresh, protected credentials.
+
+## 6. Data Cataloging (AWS Glue)
+- **Service:** AWS Glue Crawler.
+- **Process:** Configured a crawler with a custom IAM Role (`AWSGlueServiceRole-NexusRetailAnalytics`) to scan the Silver bucket.
+- **Result:** Successfully identified schemas and created 3 metadata tables in the `db_retail_analytics` database.
+
+## 7. Final Results & Analytics
+- **Validation Tool:** AWS Athena.
+- **Success Metric:** Successfully executed SQL JOIN queries on Parquet data.
+- **Key Insight:** Verified top-selling products and high-value customers directly from the S3 Lakehouse.
